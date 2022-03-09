@@ -61,3 +61,52 @@ scala>
 - Saprk 2.2.1
 - Scala 2.11.8
 - Java 1.8.0_151
+# 测试
+## Hadoop
+查看 Hadoop 文件目录
+```
+# docker exec -it docker_master_1 /bin/bash
+root@master:/# which is hadoop
+/usr/local/hadoop-2.8.2/bin/hadoop
+```
+准备数据，上传到 HDFS
+```
+root@master:/# echo "spark hadoop hadoop java scala scala spark" > word_count.txt
+root@master:/# cat word_count.txt 
+spark hadoop hadoop java scala scala spark
+root@master:/# echo "spark hadoop hadoop java scala scala spark" > word_count.txt
+root@master:/# cat word_count.txt 
+spark hadoop hadoop java scala scala spark
+root@master:/# /usr/local/hadoop-2.8.2/bin/hdfs dfs -mkdir -p /user/data/
+root@master:/# /usr/local/hadoop-2.8.2/bin/hdfs dfs -put ./word_count.txt /user/data/
+root@master:/# /usr/local/hadoop-2.8.2/bin/hdfs dfs -text /user/data/word_count.txt
+spark hadoop hadoop java scala scala spark
+```
+## Yarn
+WordCount
+```
+root@master:/# /usr/local/hadoop-2.8.2/bin/hdfs dfs -mkdir -p /user/data/output/
+root@master:/# /usr/local/hadoop-2.8.2/bin/yarn jar /usr/local/hadoop-2.8.2/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.8.2.jar wordcount /user/data/word_count.txt /user/data/output/1
+root@master:/# /usr/local/hadoop-2.8.2/bin/hdfs dfs -text /user/data/output/1/par*
+hadoop	2
+java	1
+scala	2
+spark	2
+```
+## Spark
+WordCount
+```
+root@master:/# spark-shell
+scala> val rdd = spark.read.textFile("hdfs://master:8020/user/data/word_count.txt")
+rdd: org.apache.spark.sql.Dataset[String] = [value: string]
+
+scala> rdd.flatMap(_.split(" ")).map((_,1)).groupBy("_1").count.show
++------+-----+
+|    _1|count|
++------+-----+
+| scala|    2|
+| spark|    2|
+|  java|    1|
+|hadoop|    2|
++------+-----+
+```
