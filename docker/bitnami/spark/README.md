@@ -6,6 +6,8 @@ docker network create spark_net --driver bridge
 ```shell script
 docker-compose -f docker-compose.yaml up -d
 
+docker exec -it spark-master01 /bin/bash
+
 /opt/bitnami/spark$ spark-shell --version
 Welcome to
       ____              __
