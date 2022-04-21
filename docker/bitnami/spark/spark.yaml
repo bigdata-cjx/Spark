@@ -1,0 +1,96 @@
+version: '2'
+
+services:
+  spark:
+    restart: always
+    networks:
+      - recommendation_system_net
+    container_name: spark
+    hostname: spark
+    #    image: docker.io/bitnami/spark:2.4.3-r81
+    #    image: bitnami/spark:2.4.3-youjia
+    image: youjia/spark:3.2.1
+#    volumes:
+#      - ./spark-conf/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    #      - SPARK_MASTER_URL=spark://192.168.5.117:7077
+    ports:
+      - '18080:8080'
+      - '7077:7077'
+  spark-worker1:
+    restart: always
+    networks:
+      - recommendation_system_net
+    container_name: youjia_rs_sparkworker1
+    hostname: youjia_rs_sparkworker1
+    #    image: docker.io/bitnami/spark:2.4.3-r81
+    #    image: bitnami/spark:2.4.3-youjia
+    image: youjia/spark:3.2.1
+#    volumes:
+#      - ./spark-conf/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=8G
+      - SPARK_WORKER_CORES=8
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+#  spark-worker2:
+#    restart: always
+#    networks:
+#      - recommendation_system_net
+#    container_name: youjia_rs_sparkworker2
+#    hostname: youjia_rs_sparkworker2
+#    image: docker.io/bitnami/spark:3
+#    environment:
+#      - SPARK_MODE=worker
+#      - SPARK_MASTER_URL=spark://spark:7077
+#      - SPARK_WORKER_MEMORY=4G
+#      - SPARK_WORKER_CORES=4
+#      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+#      - SPARK_RPC_ENCRYPTION_ENABLED=no
+#      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+#      - SPARK_SSL_ENABLED=no
+#  spark-worker3:
+#    restart: always
+#    networks:
+#      - recommendation_system_net
+#    container_name: youjia_rs_sparkworker3
+#    hostname: youjia_rs_sparkworker3
+#    image: docker.io/bitnami/spark:3
+#    environment:
+#      - SPARK_MODE=worker
+#      - SPARK_MASTER_URL=spark://spark:7077
+#      - SPARK_WORKER_MEMORY=4G
+#      - SPARK_WORKER_CORES=4
+#      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+#      - SPARK_RPC_ENCRYPTION_ENABLED=no
+#      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+#      - SPARK_SSL_ENABLED=no
+#  spark-worker4:
+#    restart: always
+#    networks:
+#      - recommendation_system_net
+#    container_name: youjia_rs_sparkworker4
+#    hostname: youjia_rs_sparkworker4
+#    image: docker.io/bitnami/spark:3
+#    environment:
+#      - SPARK_MODE=worker
+#      - SPARK_MASTER_URL=spark://spark:7077
+#      - SPARK_WORKER_MEMORY=4G
+#      - SPARK_WORKER_CORES=4
+#      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+#      - SPARK_RPC_ENCRYPTION_ENABLED=no
+#      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+#      - SPARK_SSL_ENABLED=no
+
+networks:
+  recommendation_system_net:
+    external: true

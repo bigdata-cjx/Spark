@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  spark-master01:
+    restart: always
+    networks:
+      - spark_net
+    container_name: spark-master01
+    hostname: spark-master01
+    image: bitnami/spark:3.2.1
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    ports:
+      - '28080:8080'
+      - '27077:7077'
+  spark-worker01:
+    restart: always
+    networks:
+      - spark_net
+    container_name: spark-worker01
+    hostname: spark-worker01
+    image: bitnami/spark:3.2.1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master01:7077
+      - SPARK_WORKER_MEMORY=8G
+      - SPARK_WORKER_CORES=8
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+
+networks:
+  spark_net:
+    external: true
