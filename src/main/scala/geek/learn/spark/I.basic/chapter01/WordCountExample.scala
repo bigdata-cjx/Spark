@@ -1,4 +1,4 @@
-package  geek.learn.spark.I.basic.chapter01
+package geek.learn.spark.I.basic.chapter01
 
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
