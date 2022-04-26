@@ -1,11 +1,13 @@
 package geek.learn.spark.I.basic.chapter03
 
-import java.security.MessageDigest
-
 import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 
+/*
+map, mapPartitions, flatMap, filter
+首先，在功能方面，这 4 个算子都用于 RDD 内部的数据转换，这 4 个算子当中，没有任何一个算子，会引入 Shuffle 计算。
+ */
 object WordCountExample {
 
   def main(args: Array[String]): Unit = {
@@ -86,7 +88,7 @@ object WordCountExample {
     // 定义判定函数f
     def f(s: String): Boolean = {
       val words: Array[String] = s.split("-")
-      if(words.length == 2){
+      if (words.length == 2) {
         val b1: Boolean = list.contains(words(0))
         val b2: Boolean = list.contains(words(1))
         return !b1 && !b2 // 返回不在特殊字符列表中的词汇对
